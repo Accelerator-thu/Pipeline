@@ -1,3 +1,21 @@
-module RegEXMEM ();
+module RegEXMEM (clk,
+                 reset,
+                 IALUResult,
+                 IMemWrData,
+                 IImmExt,
+                 IRs,
+                 IRt,
+                 IRd,
+                 IShamt,
+                 ICRegWrite,
+                 ICMemtoReg,
+                 ICBranch,
+                 ICMemRead,
+                 ICMemWrite,
+                 ICRegDst,
+                 ICALUOp,
+                 ICALUSrc1,
+                 ICALUSrc2,
+                 );
     
 endmodule
