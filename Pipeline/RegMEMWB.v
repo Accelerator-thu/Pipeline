@@ -1,7 +1,7 @@
 module RegMEMWB (clk,
                  reset,
                  IMemData,
-                 ,
+                 IALUOut,
                  IWriteReg,
                  ICRegWrite,
                  ICMemtoReg,
