@@ -53,6 +53,32 @@ module RegIDEX (clk,
             OCBranch   <= 0;
             OCMemRead  <= 0;
             OCMemWrite <= 0;
+            end else if (CFlush) begin
+            ORs        <= 0;
+            ORt        <= 0;
+            ORd        <= 0;
+            OShamt     <= 0;
+            OCRegWrite <= 0;
+            OCBranch   <= 0;
+            OCMemRead  <= 0;
+            OCMemWrite <= 0;
+            end else begin
+            ODataA     <= IDataA;
+            ODataB     <= IDataB;
+            OImmExt    <= IImmExt;
+            ORs        <= IRs;
+            ORt        <= IRt;
+            ORd        <= IRd;
+            OShamt     <= IShamt;
+            OCRegWrite <= ICRegWrite;
+            OCMemtoReg <= ICMemtoReg;
+            OCBranch   <= ICBranch;
+            OCMemRead  <= ICMemRead;
+            OCMemWrite <= ICMemWrite;
+            OCRegDst   <= ICRegDst;
+            OCALUOp    <= ICALUOp;
+            OCALUSrc1  <= ICALUSrc1;
+            OCALUSrc2  <= ICALUSrc2;
         end
     end
     
