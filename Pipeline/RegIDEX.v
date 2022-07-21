@@ -16,6 +16,7 @@ module RegIDEX (clk,
                 ICALUOp,
                 ICALUSrc1,
                 ICALUSrc2,
+                ICLUOp,
                 CFlush,
                 ODataA,
                 ODataB,
@@ -33,22 +34,22 @@ module RegIDEX (clk,
                 OCALUOp,
                 OCALUSrc1,
                 OCALUSrc2,
-                );
+                OCLUOp);
     // I: input; IC: input control; C: control; O: output; OC: output control;
     input clk, reset;
     input [31:0] IDataA, IDataB, IImmExt;
     input [4:0] IRs, IRt, IRd, IShamt;
-    input [4:0] ICRegDst;
+    // input [4:0] ICRegDst;
     input [3:0] ICALUOp;
     input [1:0] ICMemtoReg;
-    input ICRegWrite, ICBranch, ICMemRead, ICMemWrite, ICALUSrc1, ICALUSrc2;
+    input ICRegWrite, ICBranch, ICMemRead, ICMemWrite, ICRegDst, ICALUSrc1, ICALUSrc2, ICLUOp;
     input CFlush;
     output reg [31:0] ODataA, ODataB, OImmExt;
     output reg [4:0] ORs, ORt, ORd, OShamt;
-    output reg [4:0] OCRegDst;
+    // output reg [4:0] OCRegDst;
     output reg [3:0] OCALUOp;
     output reg [1:0] OCMemtoReg;
-    output reg OCRegWrite, OCBranch, OCMemRead, OCMemWrite, OCALUSrc1, OCALUSrc2;
+    output reg OCRegWrite, OCBranch, OCMemRead, OCMemWrite, OCRegDst, OCALUSrc1, OCALUSrc2, OCLUOp;
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             ORs        <= 0;
@@ -85,6 +86,7 @@ module RegIDEX (clk,
             OCALUOp    <= ICALUOp;
             OCALUSrc1  <= ICALUSrc1;
             OCALUSrc2  <= ICALUSrc2;
+            OCLUOp     <= ICLUOp;
         end
     end
     
