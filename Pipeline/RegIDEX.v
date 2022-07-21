@@ -38,11 +38,17 @@ module RegIDEX (clk,
     input clk, reset;
     input [31:0] IDataA, IDataB, IImmExt;
     input [4:0] IRs, IRt, IRd, IShamt;
-    input ICRegWrite, ICMemtoReg, ICBranch, ICMemRead, ICMemWrite, ICRegDst, ICALUOp, ICALUSrc1, ICALUSrc2;
+    input [4:0] ICRegDst;
+    input [3:0] ICALUOp;
+    input [1:0] ICMemtoReg;
+    input ICRegWrite, ICBranch, ICMemRead, ICMemWrite, ICALUSrc1, ICALUSrc2;
     input CFlush;
     output reg [31:0] ODataA, ODataB, OImmExt;
     output reg [4:0] ORs, ORt, ORd, OShamt;
-    output reg OCRegWrite, OCMemtoReg, OCBranch, OCMemRead, OCMemWrite, OCRegDst, OCALUOp, OCALUSrc1, OCALUSrc2;
+    output reg [4:0] OCRegDst;
+    output reg [3:0] OCALUOp;
+    output reg [1:0] OCMemtoReg;
+    output reg OCRegWrite, OCBranch, OCMemRead, OCMemWrite, OCALUSrc1, OCALUSrc2;
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             ORs        <= 0;
