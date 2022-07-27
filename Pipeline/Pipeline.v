@@ -19,24 +19,56 @@ module Pipeline (clk,
     
     always @(posedge clk or posedge reset) begin
         if (reset) begin
-            PC <= 32'h00400000; // Start of PC;
+            PC      <= 32'h00400000; // Start of PC;
+            display <= 0;
             end else begin
-            PC <= subPC;
+            PC      <= subPC;
+            display <= 1;
         end
     end
     
     InstMEM IM(.Address(PC), .Instruction(IF_Inst));
     // 5-stages: F | D | E | M | W
+    wire Stall;
     RegIFID FD(clk, reset,
     IF_PCadd4, IF_Inst,
-    Flush_FD, Stall_FD,
+    Flush_FD, Stall,
     ID_PCadd4, ID_Inst);
+    wire ID_RegWrite, ID_MemWrite, ID_ALUSrc1, ID_ALUSrc2, ID_Branch, ID_ExtOp, ID_LUOp;
+    wire [1:0] ID_MemtoReg, ID_RegDst, ID_PCSrc;
+    wire [3:0] ID_ALUCtrl;
+    Control ctrl(ID_Inst[31:26], ID_Inst[5:0], ID_RegWrite, ID_MemtoReg, ID_MemWrite,
+    ID_ALUCtrl, ID_ALUSrc1, ID_ALUSrc2, ID_RegDst, ID_Branch, ID_ExtOp, ID_LUOp, ID_PCSrc);
+    wire [31:0] WB_WriteData, ID_DataA, ID_DataB;
+    wire [4:0] WB_WriteReg;
+    wire zero;
+    RegisterFile RF(reset, clk,
+    ID_RegWrite, ID_Inst[25:21], ID_Inst[20:16], WB_WriteReg,
+    WB_WriteData, ID_DataA, ID_DataB);
+    assign zero = (ID_Inst[27:26] == 2'b00) ? (ID_DataA == ID_DataB) :
+    (ID_Inst[27:26] == 2'b10) ? ~(ID_DataA > 0) :
+    (ID_Inst[27:26] == 2'b11) ? (ID_DataA > 0) :
+    (ID_Inst[28:26] == 3'b101) ? ~(ID_DataA == ID_DataB) : (ID_DataA < 0);
+    wire [31:0] ID_ImmExt, ID_ImmExtShift;
+    ImmProc imp(ID_ExtOp, ID_LUOp, ID_Inst[15:0], ID_ImmExt, ID_ImmExtShift);
+    wire [31:0] Btgt, Jtgt;
+    assign Btgt = ID_PCadd4 + ID_ImmExtShift;
+    assign Jtgt = {ID_PCadd4[31:28], ID_Inst[25:0], 2'b00};
+    assign subPC = Stall ? PC :
+    (ID_Branch & zero) ? Btgt :
+    (ID_PCSrc == 2'b01) ? Jtgt :
+    (ID_PCSrc == 2'b10) ? ID_DataA :
+    IF_PCadd4;
+    assign Flush_FD = ID_PCSrc || ID_Branch && zero && ~Stall;
     RegIDEX DE(clk, reset,
     ID_DataA, ID_DataB, ID_ImmExt, ID_Rs, ID_Rt, ID_Rd, ID_Shamt,
     ID_RegWrite, ID_MemtoReg, ID_Branch, ID_MemRead, ID_MemWrite, ID_RegDst, ID_ALUOp, ID_ALUSrc1, ID_ALUSrc2, ID_LUOp,
-    Flush_DE,
+    Stall,
     EX_DataA, EX_DataB, EX_ImmExt, EX_Rs, EX_Rt, EX_Rd, EX_Shamt,
     EX_RegWrite, EX_MemtoReg, EX_Branch, EX_MemRead, EX_MemWrite, EX_RegDst, EX_ALUOp, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp);
+    
+    
+    
     RegEXMEM EM(clk, reset,
     EX_ALUResult, EX_MemWrData, EX_WriteReg,
     EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite,
@@ -51,8 +83,6 @@ module Pipeline (clk,
     WB_RegWrite, WB_MemtoReg);
     ALU alu(in1, in2, ALUCtrl, Sign, out);
     ALUControl aluctrl(ALUControl, Funct, ALUOp, sign);
-    Control ctrl(OpCode, Funct, RegWrite, MemtoReg, MemWrite, ALUControl,
-    LUSrc1, ALUSrc2, RegDst, Branch, ExtOp, LUOp, PCSrc);
     DataMEM DM(reset, clk,
     Address, Write_data, Read_data, MemRead, MemWrite, led, BCD, AN);
     Display dsp(clk, display, result, AN, BCD);
@@ -61,10 +91,6 @@ module Pipeline (clk,
     EX_ForwardA, EX_ForwardB, ID_ForwardA, ID_ForwardB);
     Hazard hzd(ID_Rs, ID_Rt, ID_Branch, ID_PCSrc,
     EX_RegWrite, EX_MemRead, EX_WriteReg, MEM_MemRead, MEM_WriteReg, Stall);
-    ImmProc imp(ExtOp, LUOp, IImm, OImm, SImm);
-    RegisterFile RF(reset, clk,
-    RegWrite, Read_register1, Read_register2, Write_register,
-    Write_data, Read_data1, Read_data2);
     
     
 endmodule
