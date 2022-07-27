@@ -28,26 +28,26 @@ module Forward (MEM_RegWrite,
     output reg ID_ForwardA, ID_ForwardB;
     always@(*)
     begin
-        if ((ID_Branch || ID_PCSrc[1]) && MEM_WriteReg&& ID_Rs == MEM_WriteReg && MEM_RegWrite)
+        if ((ID_Branch || ID_PCSrc[1]) && MEM_WriteReg && ID_Rs == MEM_WriteReg && MEM_RegWrite)
             ID_ForwardA = 1;
         else
             ID_ForwardA = 0;
         
-        if ((ID_Branch || ID_PCSrc[1]) && MEM_WriteReg&& ID_Rt == MEM_WriteReg && MEM_RegWrite)
+        if ((ID_Branch || ID_PCSrc[1]) && MEM_WriteReg && ID_Rt == MEM_WriteReg && MEM_RegWrite)
             ID_ForwardB = 1;
         else
             ID_ForwardB = 0;
         
-        if (MEM_RegWrite && MEM_WriteReg&& MEM_WriteReg == EX_Rs)
+        if (MEM_RegWrite && MEM_WriteReg && MEM_WriteReg == EX_Rs)
             EX_ForwardA = 2'b10;
-        else if (WB_RegWrite && WB_WriteReg&& WB_WriteReg == EX_Rs && (MEM_WriteReg ! = EX_Rs || ~MEM_RegWrite))
+        else if (WB_RegWrite && WB_WriteReg && WB_WriteReg == EX_Rs && (MEM_WriteReg != EX_Rs || ~MEM_RegWrite))
             EX_ForwardA = 2'b01;
         else
             EX_ForwardA = 2'b00;
         
-        if (MEM_RegWrite && MEM_WriteReg&& MEM_WriteReg == EX_Rt)
+        if (MEM_RegWrite && MEM_WriteReg && MEM_WriteReg == EX_Rt)
             EX_ForwardB = 2'b10;
-        else if (WB_RegWrite && WB_WriteReg&& WB_WriteReg == EX_Rt && (MEM_WriteReg ! = EX_Rt || ~MEM_RegWrite))
+        else if (WB_RegWrite && WB_WriteReg && WB_WriteReg == EX_Rt && (MEM_WriteReg != EX_Rt || ~MEM_RegWrite))
             EX_ForwardB = 2'b01;
         else
             EX_ForwardB = 2'b00;
