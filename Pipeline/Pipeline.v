@@ -13,6 +13,7 @@ module Pipeline (
 
     reg [15:0] result;
     reg [31:0] PC;
+    reg display;
     wire [31:0] subPC, IF_PCadd4, ID_PCadd4, EX_PCadd4, MEM_PCadd4, WB_PCadd4;
     wire [31:0] IF_Inst, ID_Inst;
     wire [31:0] DataBus;
@@ -26,7 +27,7 @@ module Pipeline (
         end
     end
 
-    InstMEM IM(.Address(PC), .Instruction(Inst_IF));
+    InstMEM IM(.Address(PC), .Instruction(IF_Inst));
     // 5-stages: F | D | E | M | W
     RegIFID FD(clk, reset, 
             IF_PCadd4, IF_Inst, 
@@ -49,7 +50,7 @@ module Pipeline (
             MEM_RegWrite, MEM_MemtoReg, 
             Flush_MW, 
             WB_MemData, WB_ALUOut, WB_WriteReg, 
-            WB_RegWrite, WB_MemtoReg)
+            WB_RegWrite, WB_MemtoReg);
 
 
     Display dsp(clk, display, result, AN, BCD);

@@ -43,7 +43,7 @@ module Display(
                     digit <= number[7:4];
                 end
                 3: begin
-                    AN <= 4'1110;
+                    AN <= 4'b1110;
                     digit <= number[3:0];
                 end
             endcase

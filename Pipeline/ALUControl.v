@@ -1,11 +1,11 @@
 module ALUControl (ALUControl,
                    Funct,
                    ALUOp,
-                   Sign);
+                   sign);
     input [5:0] Funct;
     input [3:0] ALUControl;
     output reg [4:0] ALUOp;
-    output reg sign;
+    output sign;
     
     reg [4:0] ALUCtrl;
     
@@ -54,7 +54,7 @@ module ALUControl (ALUControl,
             4'bx101 : ALUCtrl <= sltOp;
             default : ALUCtrl <= addOp;
         endcase
-        ALUOp <= ALUCtrl
+        ALUOp <= ALUCtrl;
     end
     
 endmodule
