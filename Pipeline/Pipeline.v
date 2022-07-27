@@ -11,6 +11,8 @@ module Pipeline (
     output wire [7:0] BCD;
     output wire [15:0] led;
 
+    reg [15:0] result;
+
     Display dsp(clk, display, result, AN, BCD);
 
 
