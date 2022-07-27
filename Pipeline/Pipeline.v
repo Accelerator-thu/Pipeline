@@ -101,7 +101,7 @@ module Pipeline (clk,
     MEM_RegWrite, MEM_MemtoReg, MEM_MemRead, MEM_MemWrite);
     wire [31:0] MEM_MemData;
     DataMEM DM(reset, clk,
-    MEM_ALUOut, MEM_MemWrData, MEM_MemData, MEM_MemRead, MEM_MemWrite, led, BCD, AN);
+    MEM_ALUOut, MEM_MemWrData, MEM_MemData, MEM_MemRead, MEM_MemWrite, led, result);
     wire [31:0] WB_MemData, WB_ALUOut;
     wire [1:0] WB_MemtoReg;
     wire WB_RegWrite;

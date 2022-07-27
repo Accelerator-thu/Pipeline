@@ -6,20 +6,19 @@ module DataMEM(reset,
                MemRead,
                MemWrite,
                led,
-               BCD,
-               AN);
+               BCD);
     input reset, clk;
     input [31:0] Address, Write_data;
     input MemRead, MemWrite;
     output [31:0] Read_data;
-    output reg [7:0] led;
+    output reg [15:0] led;
     output reg [7:0] BCD;
-    output reg [3:0] AN;
     parameter RAM_SIZE     = 1024;
     parameter RAM_SIZE_BIT = 32;
     
     reg [31:0] RAM_data[RAM_SIZE - 1: 0];
-    assign Read_data = MemRead ? RAM_data[Address[RAM_SIZE_BIT + 1:2]]: 32'h00000000;
+    assign Read_data = MemRead ? (Address == 32'h4000000C) ? {16'b0, led}:
+    (Address == 32'h40000010) ? {24'b0, BCD}: RAM_data[Address[RAM_SIZE_BIT + 1:2]]: 32'h00000000;
     
     integer i;
     always @(posedge reset or posedge clk)
@@ -72,7 +71,11 @@ module DataMEM(reset,
                     AN          <= 0;
             
             end else if (MemWrite) begin
-            RAM_data[Address[RAM_SIZE_BIT + 1:2]] <= Write_data;
+            case (Address)
+                32'h4000000C: led                               <= Write_data[15:0];
+                32'h40000010: BCD                               <= Write_data[15:0];
+                default:  RAM_data[Address[RAM_SIZE_BIT + 1:2]] <= Write_data;
+            endcase
             
         end
     
