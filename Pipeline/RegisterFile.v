@@ -32,9 +32,40 @@ module RegisterFile(reset,
     integer i;
     always @(posedge reset or posedge clk) begin
         if (reset) begin
-            for (i = 1; i < 32; i = i + 1) begin
-                RF_data[i] <= 32'h00000000;
-            end
+            // for (i = 1; i < 32; i = i + 1) begin
+            //     RF_data[i] <= 32'h00000000;
+            // end
+            RF_data[1]  <= 32'h00000000;
+            RF_data[2]  <= 32'h00000000;
+            RF_data[3]  <= 32'h00000000;
+            RF_data[4]  <= 32'h00000000;
+            RF_data[5]  <= 32'h00000000;
+            RF_data[6]  <= 32'h00000000;
+            RF_data[7]  <= 32'h00000400;
+            RF_data[8]  <= 32'h00000000;
+            RF_data[9]  <= 32'h00000000;
+            RF_data[10] <= 32'h00000000;
+            RF_data[11] <= 32'h00000800;
+            RF_data[12] <= 32'h00000000;
+            RF_data[13] <= 32'h00000000;
+            RF_data[14] <= 32'h00000000;
+            RF_data[15] <= 32'h00000000;
+            RF_data[16] <= 32'h00000000;
+            RF_data[17] <= 32'h00000000;
+            RF_data[18] <= 32'h00000000;
+            RF_data[19] <= 32'h00000000;
+            RF_data[20] <= 32'h00000000;
+            RF_data[21] <= 32'h00000000;
+            RF_data[22] <= 32'h00000000;
+            RF_data[23] <= 32'h00000000;
+            RF_data[24] <= 32'h00000000;
+            RF_data[25] <= 32'h00000000;
+            RF_data[26] <= 32'h00000000;
+            RF_data[27] <= 32'h00000000;
+            RF_data[28] <= 32'h00000000;
+            RF_data[29] <= 32'h00000fff;
+            RF_data[30] <= 32'h00000000;
+            RF_data[31] <= 32'h00000000;
             end else if (RegWrite && (Write_register != 5'b00000)) begin
             RF_data[Write_register] <= Write_data;
         end

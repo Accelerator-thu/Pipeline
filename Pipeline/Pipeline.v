@@ -62,14 +62,14 @@ module Pipeline (clk,
     (ID_Branch & zero) ? Btgt :
     (ID_PCSrc == 2'b01) ? Jtgt :
     (ID_PCSrc == 2'b10) ? ID_DataAF :
+    (reset) ? 32'h00400000 :
     IF_PCadd4;
     assign Flush_FD = ID_PCSrc || ID_Branch && zero && ~Stall;
-    wire EX_RegWrite, EX_MemRead, EX_MemWrite, EX_ALUSrc1, EX_ALUSrc2, EX_ExtOp, EX_LUOp;
-    wire [1:0] EX_MemtoReg, EX_RegDst;
+    wire EX_RegWrite, EX_MemRead, EX_MemWrite, EX_ALUSrc1, EX_ALUSrc2, EX_ExtOp, EX_LUOp, EX_RegDst;
+    wire [1:0] EX_MemtoReg;
     wire [3:0] EX_ALUCtrl;
     wire [31:0] EX_DataA, EX_DataB, EX_DataAF, EX_DataBF, EX_ImmExt, EX_LUImm, EX_Imm, EX_ALUout, WB_RegWrData;
-    wire [4:0] EX_Rs, EX_Rt, EX_Rd, EX_Shamt, EX_WriteReg;
-    wire [5:0] EX_Funct;
+    wire [4:0] EX_Rs, EX_Rt, EX_Rd, EX_Shamt, EX_Funct, EX_WriteReg;
     RegIDEX DE(clk, reset,
     ID_DataAF, ID_DataBF, ID_ImmExt, ID_Inst[25:21], ID_Inst[20:16], ID_Inst[15:11], ID_Inst[10:6], ID_Inst[5:0], ID_PCadd4,
     ID_RegWrite, ID_MemtoReg, ID_MemRead, ID_MemWrite, ID_RegDst, ID_ALUCtrl, ID_ALUSrc1, ID_ALUSrc2, ID_LUOp,
