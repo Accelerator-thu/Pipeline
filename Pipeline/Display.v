@@ -19,7 +19,7 @@ module Display(clk,
         if (cnt == 5000) begin
             cnt   <= 0;
             shift <= shift + 1;
-            if (shif t == 4) begin
+            if (shift == 4) begin
                 shift <= 0;
             end
         end

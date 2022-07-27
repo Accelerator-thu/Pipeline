@@ -49,24 +49,19 @@ module Pipeline (clk,
     Flush_MW,
     WB_MemData, WB_ALUOut, WB_WriteReg,
     WB_RegWrite, WB_MemtoReg);
-    
-    
-    
+    ALU alu(in1, in2, ALUCtrl, Sign, out);
+    ALUControl aluctrl(ALUControl, Funct, ALUOp, sign);
+    Control ctrl(OpCode, Funct, RegWrite, MemtoReg, MemWrite, ALUControl,
+    LUSrc1, ALUSrc2, RegDst, Branch, ExtOp, LUOp, PCSrc);
+    DataMEM DM(reset, clk,
+    Address, Write_data, Read_data, MemRead, MemWrite, led, BCD, AN);
     Display dsp(clk, display, result, AN, BCD);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    Forward fwd();
+    Hazard hzd();
+    ImmProc imp(ExtOp, LUOp, IImm, OImm, SImm);
+    RegisterFile RF(reset, clk,
+    RegWrite, Read_register1, Read_register2, Write_register,
+    Write_data, Read_data1, Read_data2);
     
     
 endmodule
