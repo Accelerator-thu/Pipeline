@@ -56,8 +56,11 @@ module Pipeline (clk,
     DataMEM DM(reset, clk,
     Address, Write_data, Read_data, MemRead, MemWrite, led, BCD, AN);
     Display dsp(clk, display, result, AN, BCD);
-    Forward fwd(ID_Rs, ID_Rt, ID_Branch, ID_PCSrc, EX_Rs, EX_Rt, MEM_RegWrite, MEM_WriteReg, WB_RegWrite, WB_WriteReg, EX_ForwardA, EX_ForwardB, ID_ForwardA, ID_ForwardB);
-    Hazard hzd();
+    Forward fwd(ID_Rs, ID_Rt, ID_Branch, ID_PCSrc, EX_Rs, EX_Rt,
+    MEM_RegWrite, MEM_WriteReg, WB_RegWrite, WB_WriteReg,
+    EX_ForwardA, EX_ForwardB, ID_ForwardA, ID_ForwardB);
+    Hazard hzd(ID_Rs, ID_Rt, ID_Branch, ID_PCSrc,
+    EX_RegWrite, EX_MemRead, EX_WriteReg, MEM_MemRead, MEM_WriteReg, Stall);
     ImmProc imp(ExtOp, LUOp, IImm, OImm, SImm);
     RegisterFile RF(reset, clk,
     RegWrite, Read_register1, Read_register2, Write_register,
