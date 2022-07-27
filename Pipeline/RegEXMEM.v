@@ -7,7 +7,6 @@ module RegEXMEM (clk,
                  ICMemtoReg,
                  ICMemRead,
                  ICMemWrite,
-                 CFlush,
                  OALUResult,
                  OMemWrData,
                  OWriteReg,
@@ -20,7 +19,7 @@ module RegEXMEM (clk,
     input [4:0] IWriteReg;
     input [1:0] ICMemtoReg;
     input ICRegWrite, ICMemRead, ICMemWrite;
-    input CFlush;
+    // input CFlush;
     output reg [31:0] OALUResult, OMemWrData;
     output reg [4:0] OWriteReg;
     output reg [1:0] OCMemtoReg;
@@ -31,10 +30,10 @@ module RegEXMEM (clk,
             OCRegWrite <= 0;
             OCMemRead  <= 0;
             OCMemWrite <= 0;
-            end else if (CFlush) begin
-            OCRegWrite <= 0;
-            OCMemRead  <= 0;
-            OCMemWrite <= 0;
+            // end else if (CFlush) begin
+            // OCRegWrite <= 0;
+            // OCMemRead  <= 0;
+            // OCMemWrite <= 0;
             end else begin
             OALUResult <= IALUResult;
             OMemWrData <= IMemWrData;

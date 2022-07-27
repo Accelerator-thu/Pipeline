@@ -85,18 +85,16 @@ module Pipeline (clk,
     assign ALU_in2 = EX_ALUSrc2 ? EX_Imm : EX_DataBF;
     assign EX_WriteReg = (EX_RegDst == 2'b00) ? EX_Rt :
     (EX_RegDst == 2'b01) ? EX_Rd : 5'b11111;
-    
-    
     RegEXMEM EM(clk, reset,
     EX_ALUResult, EX_MemWrData, EX_WriteReg,
     EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite,
-    Flush_EM,
+    // Flush_EM,
     MEM_ALUResult, MEM_MemWrData, MEM_WriteReg,
     MEM_RegWrite, MEM_MemtoReg, MEM_MemRead, MEM_MemWrite);
     RegMEMWB MW(clk, reset,
     MEM_MemData, MEM_ALUOut, MEM_WriteReg,
     MEM_RegWrite, MEM_MemtoReg,
-    Flush_MW,
+    // Flush_MW,
     WB_MemData, WB_ALUOut, WB_WriteReg,
     WB_RegWrite, WB_MemtoReg);
     ALU alu(in1, in2, ALUCtrl, Sign, out);

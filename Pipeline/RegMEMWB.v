@@ -5,7 +5,6 @@ module RegMEMWB (clk,
                  IWriteReg,
                  ICRegWrite,
                  ICMemtoReg,
-                 CFlush,
                  OMemData,
                  OALUOut,
                  OWriteReg,
@@ -16,7 +15,7 @@ module RegMEMWB (clk,
     input [4:0] IWriteReg;
     input [1:0] ICMemtoReg;
     input ICRegWrite;
-    input CFlush;
+    // input CFlush;
     output reg [31:0] OMemData, OALUOut;
     output reg [4:0] OWriteReg;
     output reg [1:0] OCMemtoReg;
@@ -25,8 +24,8 @@ module RegMEMWB (clk,
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             ICRegWrite <= 0;
-            end else if (CFlush) begin
-            ICRegWrite <= 0;
+            // end else if (CFlush) begin
+            // ICRegWrite <= 0;
             end else begin
             OMemData   <= IMemData;
             OALUOut    <= IALUOut;
