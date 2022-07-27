@@ -60,21 +60,21 @@ module DataMEM(reset,
             for (i = 33; i < 256; i = i + 1)
                 RAM_data[i] <= 32'b0;
                 // pattern
-                RAM_data[256] <= {24'h0, 8'd85 };  // U
-                RAM_data[257] <= {24'h0, 8'd110};  // n
-                RAM_data[258] <= {24'h0, 8'd105};  // i
-                RAM_data[259] <= {24'h0, 8'd120};  // x
-                for (i = 260; i < RAM_SIZE; i = i + 1)
-                    RAM_data[i] <= 32'b0;
-                    led         <= 0;
-                    BCD         <= 0;
-                    end else if (MemWrite) begin
-                    case (Address)
-                        32'h4000000C: led                               <= Write_data[15:0];
-                        32'h40000010: BCD                               <= Write_data[15:0];
-                        default:  RAM_data[Address[RAM_SIZE_BIT + 1:2]] <= Write_data;
-                    endcase
+            RAM_data[256] <= {24'h0, 8'd85 };  // U
+            RAM_data[257] <= {24'h0, 8'd110};  // n
+            RAM_data[258] <= {24'h0, 8'd105};  // i
+            RAM_data[259] <= {24'h0, 8'd120};  // x
+            for (i = 260; i < RAM_SIZE; i = i + 1)
+                RAM_data[i] <= 32'b0;
+                led         <= 0;
+                BCD         <= 0;
+        end else if (MemWrite) begin
+        case (Address)
+            32'h4000000C: led                               <= Write_data[15:0];
+            32'h40000010: BCD                               <= Write_data[15:0];
+            default:  RAM_data[Address[RAM_SIZE_BIT + 1:2]] <= Write_data;
+        endcase
             
-        end
+    end
     
 endmodule
