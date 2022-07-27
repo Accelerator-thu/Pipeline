@@ -1,7 +1,5 @@
-module Forward(
-    clk,
-    reset,
-    
-);
+module Forward(clk,
+               reset,
+               );
     
 endmodule

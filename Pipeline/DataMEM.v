@@ -25,16 +25,16 @@ module DataMEM(reset,
     always @(posedge reset or posedge clk)
         if (reset) begin
             // string
-            RAM_data[0] <= {24'h0, 8'd76 };  // L
-            RAM_data[1] <= {24'h0, 8'd105};  // i
-            RAM_data[2] <= {24'h0, 8'd110};  // n
-            RAM_data[3] <= {24'h0, 8'd117};  // u
-            RAM_data[4] <= {24'h0, 8'd120};  // x
-            RAM_data[5] <= {24'h0, 8'd32 };  //
-            RAM_data[6] <= {24'h0, 8'd105};  // i
-            RAM_data[7] <= {24'h0, 8'd115};  // s
-            RAM_data[8] <= {24'h0, 8'd32 };  //
-            RAM_data[9] <= {24'h0, 8'd78 };  // N
+            RAM_data[0]  <= {24'h0, 8'd76 };  // L
+            RAM_data[1]  <= {24'h0, 8'd105};  // i
+            RAM_data[2]  <= {24'h0, 8'd110};  // n
+            RAM_data[3]  <= {24'h0, 8'd117};  // u
+            RAM_data[4]  <= {24'h0, 8'd120};  // x
+            RAM_data[5]  <= {24'h0, 8'd32 };  //
+            RAM_data[6]  <= {24'h0, 8'd105};  // i
+            RAM_data[7]  <= {24'h0, 8'd115};  // s
+            RAM_data[8]  <= {24'h0, 8'd32 };  //
+            RAM_data[9]  <= {24'h0, 8'd78 };  // N
             RAM_data[10] <= {24'h0, 8'd111};  // o
             RAM_data[11] <= {24'h0, 8'd116};  // t
             RAM_data[12] <= {24'h0, 8'd32 };  //
@@ -60,18 +60,18 @@ module DataMEM(reset,
             RAM_data[32] <= {24'h0, 8'd120};  // x
             for (i = 33; i < 256; i = i + 1)
                 RAM_data[i] <= 32'b0;
-            // pattern
-            RAM_data[256] <= {24'h0, 8'd85 };  // U
-            RAM_data[257] <= {24'h0, 8'd110};  // n
-            RAM_data[258] <= {24'h0, 8'd105};  // i
-            RAM_data[259] <= {24'h0, 8'd120};  // x
-            for (i = 260; i < RAM_SIZE; i = i + 1)
-                RAM_data[i] <= 32'b0;
-            led <= 0;
-            BCD <= 0;
-            AN <= 0;
-
-        end else if (MemWrite) begin
+                // pattern
+                RAM_data[256] <= {24'h0, 8'd85 };  // U
+                RAM_data[257] <= {24'h0, 8'd110};  // n
+                RAM_data[258] <= {24'h0, 8'd105};  // i
+                RAM_data[259] <= {24'h0, 8'd120};  // x
+                for (i = 260; i < RAM_SIZE; i = i + 1)
+                    RAM_data[i] <= 32'b0;
+                    led         <= 0;
+                    BCD         <= 0;
+                    AN          <= 0;
+            
+            end else if (MemWrite) begin
             RAM_data[Address[RAM_SIZE_BIT + 1:2]] <= Write_data;
             
         end
