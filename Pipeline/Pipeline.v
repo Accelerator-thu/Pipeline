@@ -65,7 +65,7 @@ module Pipeline (clk,
     wire EX_RegWrite, EX_MemRead, EX_MemWrite, EX_ALUSrc1, EX_ALUSrc2, EX_ExtOp, EX_LUOp;
     wire [1:0] EX_MemtoReg, EX_RegDst, EX_PCSrc;
     wire [3:0] EX_ALUCtrl;
-    wire [31:0] EX_DataA, EX_DataB, EX_ImmExt, EX_LUImm, WB_RegWrData;
+    wire [31:0] EX_DataA, EX_DataB, EX_DataAF, EX_DataBF, EX_ImmExt, EX_LUImm, WB_RegWrData;
     wire [4:0] EX_Rs, EX_Rt, EX_Rd, EX_Shamt;
     RegIDEX DE(clk, reset,
     ID_DataAF, ID_DataBF, ID_ImmExt, ID_Inst[25:21], ID_Inst[20:16], ID_Inst[15:11], ID_Inst[10:6],
@@ -74,7 +74,18 @@ module Pipeline (clk,
     EX_DataA, EX_DataB, EX_ImmExt, EX_Rs, EX_Rt, EX_Rd, EX_Shamt,
     EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite, EX_RegDst, EX_ALUCtrl, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp);
     assign EX_Imm = EX_LUOp ? {EX_ImmExt[15:0], 16'h0000} : EX_ImmExt;
-    assign
+    assign EX_DataAF = (EX_ForwardA == 2'b00) ? EX_DataA :
+    (EX_ForwardA == 2'b01) ? WB_RegWrData :
+    (EX_ForwardA == 2'b10) ? MEM_ALUOut : 32'b0;
+    assign EX_DataBF = (EX_ForwardB == 2'b00) ? EX_DataB :
+    (EX_ForwardB == 2'b01) ? WB_RegWrData :
+    (EX_ForwardB == 2'b10) ? MEM_ALUOut : 32'b0;
+    wire [31:0] ALU_in1, ALU_in2;
+    assign ALU_in1 = EX_ALUSrc1 ? {27'b0, EX_Shamt} : EX_DataAF;
+    assign ALU_in2 = EX_ALUSrc2 ? EX_Imm : EX_DataBF;
+    assign EX_WriteReg = (EX_RegDst == 2'b00) ? EX_Rt :
+    (EX_RegDst == 2'b01) ? EX_Rd : 5'b11111;
+    
     
     RegEXMEM EM(clk, reset,
     EX_ALUResult, EX_MemWrData, EX_WriteReg,
