@@ -1,9 +1,8 @@
 module ImmProc (ExtOp,
-                LUOp,
                 IImm,
                 OImm,
                 SImm);
-    input ExtOp, LUOp;
+    input ExtOp;
     input [31:0] IImm;
     output wire [31:0] OImm, SImm;
     

@@ -50,7 +50,7 @@ module Pipeline (clk,
     (ID_Inst[27:26] == 2'b11) ? (ID_DataA > 0) :
     (ID_Inst[28:26] == 3'b101) ? ~(ID_DataA == ID_DataB) : (ID_DataA < 0);
     wire [31:0] ID_ImmExt, ID_ImmExtShift;
-    ImmProc imp(ID_ExtOp, ID_LUOp, ID_Inst[15:0], ID_ImmExt, ID_ImmExtShift);
+    ImmProc imp(ID_ExtOp, ID_Inst[15:0], ID_ImmExt, ID_ImmExtShift);
     wire [31:0] Btgt, Jtgt;
     assign Btgt = ID_PCadd4 + ID_ImmExtShift;
     assign Jtgt = {ID_PCadd4[31:28], ID_Inst[25:0], 2'b00};
@@ -63,7 +63,7 @@ module Pipeline (clk,
     wire EX_RegWrite, EX_MemRead, EX_MemWrite, EX_ALUSrc1, EX_ALUSrc2, EX_ExtOp, EX_LUOp;
     wire [1:0] EX_MemtoReg, EX_RegDst, EX_PCSrc;
     wire [3:0] EX_ALUCtrl;
-    wire [31:0] EX_DataA, EX_DataB, EX_ImmExt;
+    wire [31:0] EX_DataA, EX_DataB, EX_ImmExt, EX_LUImm;
     wire [4:0] EX_Rs, EX_Rt, EX_Rd, EX_Shamt;
     RegIDEX DE(clk, reset,
     ID_DataA, ID_DataB, ID_ImmExt, ID_Inst[25:21], ID_Inst[20:16], ID_Inst[15:11], ID_Inst[10:6],
@@ -71,7 +71,7 @@ module Pipeline (clk,
     Stall,
     EX_DataA, EX_DataB, EX_ImmExt, EX_Rs, EX_Rt, EX_Rd, EX_Shamt,
     EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite, EX_RegDst, EX_ALUCtrl, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp);
-    
+    assign EX_Imm = EX_LUOp ? {EX_ImmExt[15:0], 16'h0000} : EX_ImmExt;
     
     
     RegEXMEM EM(clk, reset,
