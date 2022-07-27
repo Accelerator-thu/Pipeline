@@ -6,7 +6,7 @@ module Display(clk,
     input clk;
     input on;
     input [15:0] number;
-    output reg [7:0] BCD;
+    output wire [7:0] BCD;
     output reg [3:0] AN;
     reg [15:0] cnt;
     reg [3:0] digit;
