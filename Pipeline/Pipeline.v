@@ -14,6 +14,7 @@ module Pipeline (
     reg [15:0] result;
 
     Display dsp(clk, display, result, AN, BCD);
+    
 
 
 
