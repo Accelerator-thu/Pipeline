@@ -1,11 +1,24 @@
 module Pipeline (
     clk,
     reset,
-    out
+    AN,
+    BCD,
+    led
 );
     input clk;
     input reset;
     output out;
+
+
+
+
+
+
+
+
+
+
+
 
     
 endmodule
