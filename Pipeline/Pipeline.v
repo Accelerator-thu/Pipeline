@@ -61,11 +61,11 @@ module Pipeline (clk,
     IF_PCadd4;
     assign Flush_FD = ID_PCSrc || ID_Branch && zero && ~Stall;
     RegIDEX DE(clk, reset,
-    ID_DataA, ID_DataB, ID_ImmExt, ID_Rs, ID_Rt, ID_Rd, ID_Shamt,
-    ID_RegWrite, ID_MemtoReg, ID_Branch, ID_MemRead, ID_MemWrite, ID_RegDst, ID_ALUOp, ID_ALUSrc1, ID_ALUSrc2, ID_LUOp,
+    ID_DataA, ID_DataB, ID_ImmExt, ID_Inst[25:21], ID_Inst[20:16], ID_Inst[15:11], ID_Inst[10:6],
+    ID_RegWrite, ID_MemtoReg, ID_MemRead, ID_MemWrite, ID_RegDst, ID_ALUOp, ID_ALUSrc1, ID_ALUSrc2, ID_LUOp,
     Stall,
     EX_DataA, EX_DataB, EX_ImmExt, EX_Rs, EX_Rt, EX_Rd, EX_Shamt,
-    EX_RegWrite, EX_MemtoReg, EX_Branch, EX_MemRead, EX_MemWrite, EX_RegDst, EX_ALUOp, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp);
+    EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite, EX_RegDst, EX_ALUOp, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp);
     
     
     

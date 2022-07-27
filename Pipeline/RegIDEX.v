@@ -10,7 +10,6 @@ module RegIDEX (clk,
                 IPCAdd4,
                 ICRegWrite,
                 ICMemtoReg,
-                ICBranch,
                 ICMemRead,
                 ICMemWrite,
                 ICRegDst,
@@ -29,7 +28,6 @@ module RegIDEX (clk,
                 OPCAdd4,
                 OCRegWrite,
                 OCMemtoReg,
-                OCBranch,
                 OCMemRead,
                 OCMemWrite,
                 OCRegDst,
@@ -44,14 +42,14 @@ module RegIDEX (clk,
     // input [4:0] ICRegDst;
     input [3:0] ICALUOp;
     input [1:0] ICMemtoReg;
-    input ICRegWrite, ICBranch, ICMemRead, ICMemWrite, ICRegDst, ICALUSrc1, ICALUSrc2, ICLUOp;
+    input ICRegWrite, ICMemRead, ICMemWrite, ICRegDst, ICALUSrc1, ICALUSrc2, ICLUOp;
     input CFlush;
     output reg [31:0] ODataA, ODataB, OImmExt, OPCAdd4;
     output reg [4:0] ORs, ORt, ORd, OShamt;
     // output reg [4:0] OCRegDst;
     output reg [3:0] OCALUOp;
     output reg [1:0] OCMemtoReg;
-    output reg OCRegWrite, OCBranch, OCMemRead, OCMemWrite, OCRegDst, OCALUSrc1, OCALUSrc2, OCLUOp;
+    output reg OCRegWrite, OCMemRead, OCMemWrite, OCRegDst, OCALUSrc1, OCALUSrc2, OCLUOp;
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             ORs        <= 0;
@@ -59,7 +57,6 @@ module RegIDEX (clk,
             ORd        <= 0;
             OShamt     <= 0;
             OCRegWrite <= 0;
-            OCBranch   <= 0;
             OCMemRead  <= 0;
             OCMemWrite <= 0;
             end else if (CFlush) begin
@@ -68,7 +65,6 @@ module RegIDEX (clk,
             ORd        <= 0;
             OShamt     <= 0;
             OCRegWrite <= 0;
-            OCBranch   <= 0;
             OCMemRead  <= 0;
             OCMemWrite <= 0;
             end else begin
@@ -82,7 +78,6 @@ module RegIDEX (clk,
             OPCAdd4    <= IPCAdd4;
             OCRegWrite <= ICRegWrite;
             OCMemtoReg <= ICMemtoReg;
-            OCBranch   <= ICBranch;
             OCMemRead  <= ICMemRead;
             OCMemWrite <= ICMemWrite;
             OCRegDst   <= ICRegDst;
