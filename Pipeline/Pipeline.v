@@ -9,10 +9,11 @@ module Pipeline (
     input reset;
     output wire [3:0] AN;
     output wire [7:0] BCD;
-    output wire [7:0] led;
+    output wire [15:0] led;
 
     Display dsp(clk, display, result, AN, BCD);
-    
+
+
 
 
 

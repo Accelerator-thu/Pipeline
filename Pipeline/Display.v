@@ -28,24 +28,28 @@ module Display(
     end
 
     always @(*) begin
-        case (shift)
-            0: begin
-                AN <= 4'b0111;
-                digit <= number[15:12];
-            end
-            1: begin
-                AN <= 4'b1011;
-                digit <= number[11:8];
-            end
-            2: begin
-                AN <= 4'b1101;
-                digit <= number[7:4];
-            end
-            3: begin
-                AN <= 4'1110;
-                digit <= number[3:0];
-            end
-        endcase
+        if (on) begin
+            case (shift)
+                0: begin
+                    AN <= 4'b0111;
+                    digit <= number[15:12];
+                end
+                1: begin
+                    AN <= 4'b1011;
+                    digit <= number[11:8];
+                end
+                2: begin
+                    AN <= 4'b1101;
+                    digit <= number[7:4];
+                end
+                3: begin
+                    AN <= 4'1110;
+                    digit <= number[3:0];
+                end
+            endcase
+        end else begin
+            AN <= 4'b1111;
+            digit <= 0;
+        end
     end
-    
 endmodule
