@@ -65,8 +65,8 @@ module Pipeline (clk,
     wire EX_RegWrite, EX_MemRead, EX_MemWrite, EX_ALUSrc1, EX_ALUSrc2, EX_ExtOp, EX_LUOp;
     wire [1:0] EX_MemtoReg, EX_RegDst, EX_PCSrc;
     wire [3:0] EX_ALUCtrl;
-    wire [31:0] EX_DataA, EX_DataB, EX_DataAF, EX_DataBF, EX_ImmExt, EX_LUImm, WB_RegWrData;
-    wire [4:0] EX_Rs, EX_Rt, EX_Rd, EX_Shamt;
+    wire [31:0] EX_DataA, EX_DataB, EX_DataAF, EX_DataBF, EX_ImmExt, EX_LUImm, EX_Imm, WB_RegWrData;
+    wire [4:0] EX_Rs, EX_Rt, EX_Rd, EX_Shamt, EX_WriteReg;
     RegIDEX DE(clk, reset,
     ID_DataAF, ID_DataBF, ID_ImmExt, ID_Inst[25:21], ID_Inst[20:16], ID_Inst[15:11], ID_Inst[10:6],
     ID_RegWrite, ID_MemtoReg, ID_MemRead, ID_MemWrite, ID_RegDst, ID_ALUCtrl, ID_ALUSrc1, ID_ALUSrc2, ID_LUOp,
