@@ -12,8 +12,7 @@ module Forward (ID_Rs,
                 EX_ForwardB,
                 ID_ForwardA,
                 ID_ForwardB);
-    input [4:0] MEM_WriteReg, WB_WriteReg;
-    input [31:0] ID_Rs, ID_Rt, EX_Rs, EX_Rt;
+    input [4:0] MEM_WriteReg, WB_WriteReg, ID_Rs, ID_Rt, EX_Rs, EX_Rt;
     input [1:0] ID_PCSrc;
     input ID_Branch, MEM_RegWrite, WB_RegWrite;
     output reg [1:0] EX_ForwardA, EX_ForwardB;
