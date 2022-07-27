@@ -14,8 +14,8 @@ module Control (OpCode,
                 PCSrc);
     input [5:0] OpCode, Funct;
     output [3:0] ALUControl;
-    output [1:0] MemtoReg, PCSrc;
-    output RegWrite, MemRead, MemWrite, RegDst, Branch, ALUSrc1, ALUSrc2, ExtOp, LUOp;
+    output [1:0] MemtoReg, RegDst, PCSrc;
+    output RegWrite, MemRead, MemWrite, Branch, ALUSrc1, ALUSrc2, ExtOp, LUOp;
     
     assign ALUControl = {OpCode[0], (OpCode == 6'h00) ? 3'b010 :
     (OpCode == 6'h04) ? 3'b001 :

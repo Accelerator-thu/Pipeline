@@ -25,9 +25,9 @@ module RegMEMWB (clk,
     
     always @(posedge clk or posedge reset) begin
         if (reset) begin
-            ICRegWrite <= 0;
+            OCRegWrite <= 0;
             // end else if (CFlush) begin
-            // ICRegWrite <= 0;
+            // OCRegWrite <= 0;
             end else begin
             OMemData   <= IMemData;
             OALUOut    <= IALUOut;

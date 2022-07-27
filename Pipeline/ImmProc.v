@@ -3,7 +3,7 @@ module ImmProc (ExtOp,
                 OImm,
                 SImm);
     input ExtOp;
-    input [31:0] IImm;
+    input [15:0] IImm;
     output wire [31:0] OImm, SImm;
     
     wire [31:0] ExtResult;

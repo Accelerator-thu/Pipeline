@@ -14,7 +14,7 @@ module DataMEM(reset,
     output reg [15:0] led;
     output reg [7:0] BCD;
     parameter RAM_SIZE     = 1024;
-    parameter RAM_SIZE_BIT = 32;
+    parameter RAM_SIZE_BIT = 30;
     
     reg [31:0] RAM_data[RAM_SIZE - 1: 0];
     assign Read_data = MemRead ? (Address == 32'h4000000C) ? {16'b0, led}:
@@ -68,8 +68,6 @@ module DataMEM(reset,
                     RAM_data[i] <= 32'b0;
                     led         <= 0;
                     BCD         <= 0;
-                    AN          <= 0;
-            
             end else if (MemWrite) begin
             case (Address)
                 32'h4000000C: led                               <= Write_data[15:0];
