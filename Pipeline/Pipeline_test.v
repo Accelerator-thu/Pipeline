@@ -2,7 +2,8 @@ module Pipeline_test ();
     
     reg clk, reset;
     wire [3:0] AN;
-    wire [15:0] BCD, led;
+    wire [7:0] BCD,
+    wire [15:0] led;
     
     Pipeline CPU(clk, reset, AN, BCD, led);
     

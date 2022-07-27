@@ -9,9 +9,9 @@ module Pipeline (clk,
     output wire [7:0] BCD;
     output wire [15:0] led;
     
-    reg [15:0] result;
     reg [31:0] PC;
     reg display;
+    wire [15:0] result;
     wire [31:0] subPC, IF_PCadd4, ID_PCadd4, EX_PCadd4, MEM_PCadd4, WB_PCadd4;
     wire [31:0] IF_Inst, ID_Inst;
     wire [31:0] MEM_ALUOut;
