@@ -3,6 +3,7 @@ module RegEXMEM (clk,
                  IALUResult,
                  IMemWrData,
                  IWriteReg,
+                 IPCAdd4,
                  ICRegWrite,
                  ICMemtoReg,
                  ICMemRead,
@@ -10,17 +11,18 @@ module RegEXMEM (clk,
                  OALUResult,
                  OMemWrData,
                  OWriteReg,
+                 OPCAdd4,
                  OCRegWrite,
                  OCMemtoReg,
                  OCMemRead,
                  OCMemWrite);
     input clk, reset;
-    input [31:0] IALUResult, IMemWrData;
+    input [31:0] IALUResult, IMemWrData, IPCAdd4;
     input [4:0] IWriteReg;
     input [1:0] ICMemtoReg;
     input ICRegWrite, ICMemRead, ICMemWrite;
     // input CFlush;
-    output reg [31:0] OALUResult, OMemWrData;
+    output reg [31:0] OALUResult, OMemWrData, OPCAdd4;
     output reg [4:0] OWriteReg;
     output reg [1:0] OCMemtoReg;
     output reg OCRegWrite, OCMemRead, OCMemWrite;
@@ -38,6 +40,7 @@ module RegEXMEM (clk,
             OALUResult <= IALUResult;
             OMemWrData <= IMemWrData;
             OWriteReg  <= IWriteReg;
+            OPCAdd4    <= IPCAdd4;
             OCRegWrite <= ICRegWrite;
             OCMemtoReg <= ICMemtoReg;
             OCMemRead  <= ICMemRead;

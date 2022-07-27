@@ -63,19 +63,19 @@ module Pipeline (clk,
     IF_PCadd4;
     assign Flush_FD = ID_PCSrc || ID_Branch && zero && ~Stall;
     wire EX_RegWrite, EX_MemRead, EX_MemWrite, EX_ALUSrc1, EX_ALUSrc2, EX_ExtOp, EX_LUOp;
-    wire [1:0] EX_MemtoReg, EX_RegDst, EX_PCSrc;
+    wire [1:0] EX_MemtoReg, EX_RegDst;
     wire [3:0] EX_ALUCtrl;
     wire [31:0] EX_DataA, EX_DataB, EX_DataAF, EX_DataBF, EX_ImmExt, EX_LUImm, EX_Imm, WB_RegWrData;
     wire [4:0] EX_Rs, EX_Rt, EX_Rd, EX_Shamt, EX_Funct, EX_WriteReg;
     RegIDEX DE(clk, reset,
-    ID_DataAF, ID_DataBF, ID_ImmExt, ID_Inst[25:21], ID_Inst[20:16], ID_Inst[15:11], ID_Inst[10:6], ID_Inst[5:0],
+    ID_DataAF, ID_DataBF, ID_ImmExt, ID_Inst[25:21], ID_Inst[20:16], ID_Inst[15:11], ID_Inst[10:6], ID_Inst[5:0], ID_PCadd4,
     ID_RegWrite, ID_MemtoReg, ID_MemRead, ID_MemWrite, ID_RegDst, ID_ALUCtrl, ID_ALUSrc1, ID_ALUSrc2, ID_LUOp,
     Stall,
-    EX_DataA, EX_DataB, EX_ImmExt, EX_Rs, EX_Rt, EX_Rd, EX_Shamt, EX_Funct,
+    EX_DataA, EX_DataB, EX_ImmExt, EX_Rs, EX_Rt, EX_Rd, EX_Shamt, EX_Funct, EX_PCadd4,
     EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite, EX_RegDst, EX_ALUCtrl, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp);
     assign EX_Imm = EX_LUOp ? {EX_ImmExt[15:0], 16'h0000} : EX_ImmExt;
     assign EX_DataAF = (EX_ForwardA == 2'b00) ? EX_DataA :
-    (EX_ForwardA == 2'b01) ? WB_RegWrData :
+    (EX_ForwardA == 2'b01) ? WB_RegWrData
     (EX_ForwardA == 2'b10) ? MEM_ALUOut : 32'b0;
     assign EX_DataBF = (EX_ForwardB == 2'b00) ? EX_DataB :
     (EX_ForwardB == 2'b01) ? WB_RegWrData :
@@ -85,22 +85,35 @@ module Pipeline (clk,
     assign ALU_in2 = EX_ALUSrc2 ? EX_Imm : EX_DataBF;
     assign EX_WriteReg = (EX_RegDst == 2'b00) ? EX_Rt :
     (EX_RegDst == 2'b01) ? EX_Rd : 5'b11111;
+    wire [4:0] ALUOp;
+    wire sign;
     ALUControl aluctrl(EX_ALUCtrl, EX_Funct, ALUOp, sign);
-    ALU alu(in1, in2, ALUCtrl, Sign, out);
+    ALU alu(ALU_in1, ALU_in2, ALUOp, sign, EX_ALUout);
+    wire [31:0] MEM_ALUOut, MEM_MemWrData;
+    wire [4:0] MEM_WriteReg;
+    wire [1:0] MEM_MemtoReg;
+    wire MEM_RegWrite, MEM_MemRead, MEM_MemWrite;
     RegEXMEM EM(clk, reset,
-    EX_ALUResult, EX_MemWrData, EX_WriteReg,
+    EX_ALUout, EX_DataBF, EX_WriteReg, EX_PCadd4,
     EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite,
     // Flush_EM,
-    MEM_ALUResult, MEM_MemWrData, MEM_WriteReg,
+    MEM_ALUOut, MEM_MemWrData, MEM_WriteReg, MEM_PCadd4,
     MEM_RegWrite, MEM_MemtoReg, MEM_MemRead, MEM_MemWrite);
+    wire [31:0] MEM_MemData;
+    DataMEM DM(reset, clk,
+    MEM_ALUOut, MEM_MemWrData, MEM_MemData, MEM_MemRead, MEM_MemWrite, led, BCD, AN);
+    wire [31:0] WB_MemData, WB_ALUOut;
+    wire [4:0] WB_WriteReg;
+    wire [1:0] WB_MemtoReg;
+    wire WB_RegWrite;
     RegMEMWB MW(clk, reset,
-    MEM_MemData, MEM_ALUOut, MEM_WriteReg,
+    MEM_MemData, MEM_ALUOut, MEM_WriteReg, MEM_PCadd4,
     MEM_RegWrite, MEM_MemtoReg,
     // Flush_MW,
-    WB_MemData, WB_ALUOut, WB_WriteReg,
+    WB_MemData, WB_ALUOut, WB_WriteReg, WB_PCadd4,
     WB_RegWrite, WB_MemtoReg);
-    DataMEM DM(reset, clk,
-    Address, Write_data, Read_data, MemRead, MemWrite, led, BCD, AN);
+    assign WB_RegWrData = (WB_MemtoReg == 2'b01) ? WB_MemData :
+    (WB_MemtoReg == 2'b10) ? WB_PCadd4 : WB_ALUOut;
     Display dsp(clk, display, result, AN, BCD);
     Forward fwd(ID_Rs, ID_Rt, ID_Branch, ID_PCSrc, EX_Rs, EX_Rt,
     MEM_RegWrite, MEM_WriteReg, WB_RegWrite, WB_WriteReg,

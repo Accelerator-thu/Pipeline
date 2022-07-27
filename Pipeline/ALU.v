@@ -1,10 +1,10 @@
 module ALU(in1,
            in2,
-           ALUCtrl,
+           ALUOp,
            Sign,
            out);
     input [31:0] in1, in2;
-    input [4:0] ALUCtrl;
+    input [4:0] ALUOp;
     input Sign;
     output reg [31:0] out;
     // zero is not calculated here for better overall performance.
@@ -26,7 +26,7 @@ module ALU(in1,
     (in1[30 : 0] < in2[30 : 0]);
     
     always @(*) begin
-        case (ALUCtrl)
+        case (ALUOp)
             andOp : out   <= in1 & in2;
             orOp  : out   <= in1 | in2;
             addOp : out   <= in1 + in2;
