@@ -8,7 +8,8 @@ module Pipeline (clk,
     output wire [3:0] AN;
     output wire [7:0] BCD;
     output wire [15:0] led;
-    
+//    wire clk;
+//    assign clk = clk ^ clk_in;
     reg [31:0] PC;
     reg display;
     wire [15:0] result;

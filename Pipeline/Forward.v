@@ -18,7 +18,7 @@ module Forward (ID_Rs,
     output reg [1:0] EX_ForwardA, EX_ForwardB;
     output reg ID_ForwardA, ID_ForwardB;
     always @(*) begin
-        if (MEM_WriteReg && (ID_Branch || ID_PCSrc[1]) && MEM_RegWrite && ID_Rs == MEM_WriteReg)
+        if (MEM_WriteReg && (ID_Branch || ID_PCSrc == 2'b10) && MEM_RegWrite && ID_Rs == MEM_WriteReg)
             ID_ForwardA = 1'b1;
         else
             ID_ForwardA = 1'b0;

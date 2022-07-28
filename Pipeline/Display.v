@@ -21,7 +21,7 @@ module Display(clk,
             shift <= 0;
         end else begin
             cnt <= cnt + 1;
-            if (cnt == 5) begin
+            if (cnt == 500) begin
                 cnt   <= 0;
                 if (shift < 2'b11)
                     shift <= shift + 1;
