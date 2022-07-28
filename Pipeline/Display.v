@@ -16,7 +16,7 @@ module Display(clk,
     
     always @(posedge clk) begin
         cnt <= cnt + 1;
-        if (cnt == 5000) begin
+        if (cnt == 50) begin
             cnt   <= 0;
             shift <= shift + 1;
             if (shift == 4) begin
