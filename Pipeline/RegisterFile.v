@@ -8,7 +8,9 @@ module RegisterFile(reset,
                     Write_register,
                     Write_data,
                     Read_data1,
-                    Read_data2);
+                    Read_data2,
+                    finish,
+                    result);
     //Input Clock Signals
     input reset;
     input clk;
@@ -22,6 +24,8 @@ module RegisterFile(reset,
     //Output Data Signals
     output [31:0] Read_data1;
     output [31:0] Read_data2;
+    output [31:0] result;
+    output finish;
     
     reg [31:0] RF_data[31:1];
     
@@ -70,6 +74,9 @@ module RegisterFile(reset,
             RF_data[Write_register] <= Write_data;
         end
     end
+    
+    assign finish = ~(RF_data[2] == 0);
+    assign result = RF_data[2];
     
 endmodule
     

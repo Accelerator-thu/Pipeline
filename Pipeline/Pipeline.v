@@ -15,7 +15,7 @@ module Pipeline (clk,
     wire [31:0] subPC, IF_PCadd4, ID_PCadd4, EX_PCadd4, MEM_PCadd4, WB_PCadd4;
     wire [31:0] IF_Inst, ID_Inst;
     wire [31:0] MEM_ALUOut;
-    wire Flush_FD;
+    wire Flush_FD, finish;
     wire ID_ForwardA, ID_ForwardB;
     wire [1:0] EX_ForwardA, EX_ForwardB;
     
@@ -41,12 +41,12 @@ module Pipeline (clk,
     wire [3:0] ID_ALUCtrl;
     Control ctrl(ID_Inst[31:26], ID_Inst[5:0], ID_RegWrite, ID_MemRead, ID_MemtoReg, ID_MemWrite,
     ID_ALUCtrl, ID_ALUSrc1, ID_ALUSrc2, ID_RegDst, ID_Branch, ID_ExtOp, ID_LUOp, ID_PCSrc);
-    wire [31:0] WB_RegWrData, ID_DataA, ID_DataB, ID_DataAF, ID_DataBF;
+    wire [31:0] WB_RegWrData, ID_DataA, ID_DataB, ID_DataAF, ID_DataBF, F_result;
     wire [4:0] WB_WriteReg;
     wire zero;
     RegisterFile RF(reset, ~clk,
     WB_RegWrite, ID_Inst[25:21], ID_Inst[20:16], WB_WriteReg,
-    WB_RegWrData, ID_DataA, ID_DataB);
+    WB_RegWrData, ID_DataA, ID_DataB, finish, F_result);
     assign ID_DataAF = ID_ForwardA ? MEM_ALUOut : ID_DataA;
     assign ID_DataBF = ID_ForwardB ? MEM_ALUOut : ID_DataB;
     assign zero = (ID_Inst[27:26] == 2'b00) ? (ID_DataAF == ID_DataBF) :
@@ -67,15 +67,15 @@ module Pipeline (clk,
     wire EX_RegWrite, EX_MemRead, EX_MemWrite, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp;
     wire [1:0] EX_MemtoReg, EX_RegDst;
     wire [3:0] EX_ALUCtrl;
-    wire [31:0] EX_DataA, EX_DataB, EX_DataAF, EX_DataBF, EX_ImmExt, EX_Imm, EX_ALUout;
+    wire [31:0] EX_DataA, EX_DataB, EX_DataAF, EX_DataBF, EX_ImmExt, EX_Imm, EX_ALUout, EX_Result;
     wire [4:0] EX_Rs, EX_Rt, EX_Rd, EX_Shamt, EX_WriteReg;
     wire [5:0] EX_Funct;
     RegIDEX DE(clk, reset,
     ID_DataAF, ID_DataBF, ID_ImmExt, ID_Inst[25:21], ID_Inst[20:16], ID_Inst[15:11], ID_Inst[10:6], ID_Inst[5:0], ID_PCadd4,
-    ID_RegWrite, ID_MemtoReg, ID_MemRead, ID_MemWrite, ID_RegDst, ID_ALUCtrl, ID_ALUSrc1, ID_ALUSrc2, ID_LUOp,
+    ID_RegWrite, ID_MemtoReg, ID_MemRead, ID_MemWrite, ID_RegDst, ID_ALUCtrl, ID_ALUSrc1, ID_ALUSrc2, ID_LUOp, F_result,
     Stall,
     EX_DataA, EX_DataB, EX_ImmExt, EX_Rs, EX_Rt, EX_Rd, EX_Shamt, EX_Funct, EX_PCadd4,
-    EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite, EX_RegDst, EX_ALUCtrl, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp);
+    EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite, EX_RegDst, EX_ALUCtrl, EX_ALUSrc1, EX_ALUSrc2, EX_LUOp, EX_Result);
     assign EX_Imm = EX_LUOp ? {EX_ImmExt[15:0], 16'h0000} : EX_ImmExt;
     assign EX_DataAF = (EX_ForwardA == 2'b00) ? EX_DataA :
     (EX_ForwardA == 2'b01) ? WB_RegWrData :
@@ -92,19 +92,23 @@ module Pipeline (clk,
     wire sign;
     ALUControl aluctrl(EX_ALUCtrl, EX_Funct, ALUOp, sign);
     ALU alu(ALU_in1, ALU_in2, ALUOp, sign, EX_ALUout);
-    wire [31:0] MEM_MemWrData;
+    wire [31:0] MEM_MemWrData, MEM_Result;
     wire [4:0] MEM_WriteReg;
     wire [1:0] MEM_MemtoReg;
     wire MEM_RegWrite, MEM_MemRead, MEM_MemWrite;
     RegEXMEM EM(clk, reset,
     EX_ALUout, EX_DataBF, EX_WriteReg, EX_PCadd4,
-    EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite,
+    EX_RegWrite, EX_MemtoReg, EX_MemRead, EX_MemWrite, EX_Result,
     // Flush_EM,
     MEM_ALUOut, MEM_MemWrData, MEM_WriteReg, MEM_PCadd4,
-    MEM_RegWrite, MEM_MemtoReg, MEM_MemRead, MEM_MemWrite);
-    wire [31:0] MEM_MemData;
+    MEM_RegWrite, MEM_MemtoReg, MEM_MemRead, MEM_MemWrite, MEM_Result);
+    wire [31:0] MEM_MemData, Address, MEM_MemWriteData;
+    wire MEM_MemWriteWL;
+    assign Address          = finish ? 32'h40000010 : MEM_ALUOut;
+    assign MEM_MemWriteWL   = finish ? 1 : MEM_MemWrite;
+    assign MEM_MemWriteData = finish ? MEM_Result : MEM_MemWrData;
     DataMEM DM(reset, clk,
-    MEM_ALUOut, MEM_MemWrData, MEM_MemData, MEM_MemRead, MEM_MemWrite, led, result);
+    Address, MEM_MemWriteData, MEM_MemData, MEM_MemRead, MEM_MemWriteWL, led, result);
     wire [31:0] WB_MemData, WB_ALUOut;
     wire [1:0] WB_MemtoReg;
     RegMEMWB MW(clk, reset,

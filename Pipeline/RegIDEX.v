@@ -18,6 +18,7 @@ module RegIDEX (clk,
                 ICALUSrc1,
                 ICALUSrc2,
                 ICLUOp,
+                IResult,
                 CFlush,
                 ODataA,
                 ODataB,
@@ -36,10 +37,11 @@ module RegIDEX (clk,
                 OCALUOp,
                 OCALUSrc1,
                 OCALUSrc2,
-                OCLUOp);
+                OCLUOp,
+                OResult);
     // I: input; IC: input control; C: control; O: output; OC: output control;
     input clk, reset;
-    input [31:0] IDataA, IDataB, IImmExt, IPCAdd4;
+    input [31:0] IDataA, IDataB, IImmExt, IPCAdd4, IResult;
     input [4:0] IRs, IRt, IRd, IShamt;
     input [5:0] IFunct;
     // input [4:0] ICRegDst;
@@ -47,7 +49,7 @@ module RegIDEX (clk,
     input [1:0] ICMemtoReg, ICRegDst;
     input ICRegWrite, ICMemRead, ICMemWrite, ICALUSrc1, ICALUSrc2, ICLUOp;
     input CFlush;
-    output reg [31:0] ODataA, ODataB, OImmExt, OPCAdd4;
+    output reg [31:0] ODataA, ODataB, OImmExt, OPCAdd4, OResult;
     output reg [4:0] ORs, ORt, ORd, OShamt;
     output reg [5:0] OFunct;
     // output reg [4:0] OCRegDst;
@@ -83,6 +85,7 @@ module RegIDEX (clk,
             OShamt     <= IShamt;
             OFunct     <= IFunct;
             OPCAdd4    <= IPCAdd4;
+            OResult    <= IResult;
             OCRegWrite <= ICRegWrite;
             OCMemtoReg <= ICMemtoReg;
             OCMemRead  <= ICMemRead;

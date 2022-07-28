@@ -1,10 +1,3 @@
-.data
-str: .space 512
-pattern: .space 512
-filename: .asciiz "test.dat"
-
-.text
-main:
 #fopen
 la $a0, filename #load filename
 li $a1, 0 #flag
