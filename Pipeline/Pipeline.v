@@ -115,7 +115,7 @@ module Pipeline (clk,
     WB_RegWrite, WB_MemtoReg);
     assign WB_RegWrData = (WB_MemtoReg == 2'b01) ? WB_MemData :
     (WB_MemtoReg == 2'b10) ? WB_PCadd4 : WB_ALUOut;
-    Display dsp(clk, display, result, AN, BCD);
+    Display dsp(clk, reset, display, result, AN, BCD);
     Forward fwd(ID_Inst[25:21], ID_Inst[20:16], ID_Branch, ID_PCSrc, EX_Rs, EX_Rt,
     MEM_RegWrite, MEM_WriteReg, WB_RegWrite, WB_WriteReg,
     EX_ForwardA, EX_ForwardB, ID_ForwardA, ID_ForwardB);

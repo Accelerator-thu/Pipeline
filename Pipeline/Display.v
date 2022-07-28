@@ -1,26 +1,32 @@
 module Display(clk,
+               reset,
                on,
                number,
                AN,
                BCD);
-    input clk;
+    input clk, reset;
     input on;
     input [15:0] number;
     output wire [7:0] BCD;
     output reg [3:0] AN;
     reg [15:0] cnt;
     reg [3:0] digit;
-    reg [1:0] shift;
+    reg [2:0] shift;
     
     BCD7 bcd7(digit, BCD);
     
-    always @(posedge clk) begin
-        cnt <= cnt + 1;
-        if (cnt == 50) begin
-            cnt   <= 0;
-            shift <= shift + 1;
-            if (shift == 4) begin
-                shift <= 0;
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            cnt <= 0;
+            shift <= 0;
+        end else begin
+            cnt <= cnt + 1;
+            if (cnt == 50) begin
+                cnt   <= 0;
+                if (shift < 2'b11)
+                    shift <= shift + 1;
+                else
+                    shift <= 0;
             end
         end
     end
