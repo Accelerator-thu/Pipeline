@@ -54,7 +54,7 @@ module RegisterFile(reset,
             RF_data[13] <= 32'h00000000;
             RF_data[14] <= 32'h00000000;
             RF_data[15] <= 32'h00000000;
-            RF_data[16] <= 32'h00000000;
+            RF_data[16] <= 32'h000000ff;
             RF_data[17] <= 32'h00000000;
             RF_data[18] <= 32'h00000000;
             RF_data[19] <= 32'h00000000;
@@ -67,7 +67,7 @@ module RegisterFile(reset,
             RF_data[26] <= 32'h00000000;
             RF_data[27] <= 32'h00000000;
             RF_data[28] <= 32'h00000000;
-            RF_data[29] <= 32'h00000fff;
+            RF_data[29] <= 32'h00000000;
             RF_data[30] <= 32'h00000000;
             RF_data[31] <= 32'h00000000;
             end else if (RegWrite && (Write_register != 5'b00000)) begin

@@ -8,8 +8,8 @@ module Pipeline (clk,
     output wire [3:0] AN;
     output wire [7:0] BCD;
     output wire [15:0] led;
-//    wire clk;
-//    assign clk = clk ^ clk_in;
+    //    wire clk;
+    //    assign clk = clk ^ clk_in;
     reg [31:0] PC;
     reg display;
     wire [15:0] result;
@@ -30,6 +30,7 @@ module Pipeline (clk,
         end
     end
     assign IF_PCadd4 = PC + 32'd4;
+    assign led       = PC[15:0];
     InstMEM IM(.Address(PC), .Instruction(IF_Inst));
     // 5-stages: F | D | E | M | W
     wire Stall;
