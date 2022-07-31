@@ -8,8 +8,7 @@ module Pipeline (clk,
     output wire [3:0] AN;
     output wire [7:0] BCD;
     output wire [15:0] led;
-    //    wire clk;
-    //    assign clk = clk ^ clk_in;
+    
     reg [31:0] PC;
     reg display;
     wire [15:0] result;
@@ -30,7 +29,7 @@ module Pipeline (clk,
         end
     end
     assign IF_PCadd4 = PC + 32'd4;
-    assign led       = PC[15:0];
+//    assign led       = PC[15:0];
     InstMEM IM(.Address(PC), .Instruction(IF_Inst));
     // 5-stages: F | D | E | M | W
     wire Stall;
@@ -104,13 +103,13 @@ module Pipeline (clk,
     // Flush_EM,
     MEM_ALUOut, MEM_MemWrData, MEM_WriteReg, MEM_PCadd4,
     MEM_RegWrite, MEM_MemtoReg, MEM_MemRead, MEM_MemWrite, MEM_Result);
-    wire [31:0] MEM_MemData, Address, MEM_MemWriteData;
+    wire [31:0] MEM_MemData, Address, MEM_MemWriteData, Counter;
     wire MEM_MemWriteWL;
     assign Address          = finish ? 32'h40000010 : MEM_ALUOut;
     assign MEM_MemWriteWL   = finish ? 1 : MEM_MemWrite;
     assign MEM_MemWriteData = finish ? MEM_Result : MEM_MemWrData;
     DataMEM DM(reset, clk,
-    Address, MEM_MemWriteData, MEM_MemData, MEM_MemRead, MEM_MemWriteWL, led, result);
+    Address, MEM_MemWriteData, MEM_MemData, MEM_MemRead, MEM_MemWriteWL, led, result, Counter);
     wire [31:0] WB_MemData, WB_ALUOut;
     wire [1:0] WB_MemtoReg;
     RegMEMWB MW(clk, reset,

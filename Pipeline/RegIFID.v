@@ -13,13 +13,13 @@ module RegIFID (clk,
     // Hazard is realized in the overall design of pipeline. Used when deciding the input of IF/ID.
     
     always @(posedge clk or posedge reset) begin
-        if (reset)
+        if (reset) begin
             OInst <= 32'b0;
-        else if (CFlush)
+            end else if (CFlush) begin
             OInst <= 32'b0;
-        else if (!CStall) begin
+            end else if (!CStall) begin
             OPCAdd4 <= IPCAdd4;
             OInst   <= IInst;
         end
-            end
-            endmodule
+    end
+endmodule
